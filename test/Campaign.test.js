@@ -84,11 +84,8 @@ describe("Campaigns", () => {
 			gas: "1000000",
 		});
 		let balance = await web3.eth.getBalance(accounts[1]);
-		console.log("balance", balance);
 		balance = fromWei(balance, "ether");
-		console.log("balance", balance);
 		balance = parseFloat(balance);
-		console.log("balance", balance);
 
 		assert(balance > 104);
 	});
