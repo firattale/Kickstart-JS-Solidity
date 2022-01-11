@@ -6,6 +6,7 @@ const web3 = new Web3(provider);
 
 const compiledFactory = require("../ethereum/build/CampaignFactory.json");
 const compiledCampaign = require("../ethereum/build/Campaign.json");
+const { it } = require("mocha");
 
 let accounts;
 let factory;
@@ -31,5 +32,17 @@ describe("Campaigns", () => {
 	it("deploys a factory and campaign", () => {
 		assert.ok(factory.options.address);
 		assert.ok(campaign.options.address);
+	});
+	it("marks the as the campaign manager", async () => {
+		const manager = await campaign.methods.manager().call();
+		assert.equal(manager, accounts[0]);
+	});
+	it("allows people to contribute money and marks them as approvers", async () => {
+		await campaign.methods.contribute().send({
+			value: "200",
+			from: accounts[1],
+		});
+		const isContributor = await campaign.methods.approvers(accounts[1]).call();
+		assert(isContributor);
 	});
 });
