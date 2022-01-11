@@ -29,7 +29,7 @@ contract Campaign {
     mapping(address => bool) public approvers;
     uint public approversCount;
 
-    modifier restricted() {
+    modifier onlyOwner() {
         require(msg.sender == manager);
         _;
     }
@@ -46,7 +46,7 @@ contract Campaign {
         approversCount++;
     }
 
-    function createRequest(string description, uint value, address recipient) public restricted {
+    function createRequest(string description, uint value, address recipient) public onlyOwner {
         Request memory newRequest = Request({
            description: description,
            value: value,
@@ -68,7 +68,7 @@ contract Campaign {
         request.approvalCount++;
     }
 
-    function finalizeRequest(uint index) public restricted {
+    function finalizeRequest(uint index) public onlyOwner {
         Request storage request = requests[index];
 
         require(request.approvalCount > (approversCount / 2));
